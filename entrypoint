@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 # Paths
@@ -111,6 +112,19 @@ function createUser() {
     fi
 }
 
+# Mount S3
+test $MOUNT_POINT
+if [ -z "$MOUNT_POINT" ]; then
+    echo 'Invalid mountpoint'
+    exit
+fi
+rm -rf ${MOUNT_POINT}
+mkdir -p ${MOUNT_POINT}
+
+echo ${ACCESS_KEY_ID}:${SECRET_ACCESS_KEY} > /etc/.s3cred
+chmod 600 /etc/.s3cred
+/usr/bin/s3fs ${S3_BUCKET} ${MOUNT_POINT} -o passwd_file=/etc/.s3cred,allow_other,use_path_request_style,url=${S3_URL} -o umask=0033,uid=1000
+
 # Allow running other programs, e.g. bash
 if [[ -z "$1" || "$1" =~ $reArgsMaybe ]]; then
     startSshd=true
@@ -161,10 +175,18 @@ if [ ! -f "$userConfFinalPath" ]; then
 
     # Generate unique ssh keys for this container, if needed
     if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
-        ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
+	mkdir -p /home/ssh
+	ln -s /home/ssh/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key
+    fi
+    if [ ! -f /home/ssh/ssh_host_ed25519_key ]; then
+        ssh-keygen -t ed25519 -f /home/ssh/ssh_host_ed25519_key -N ''
     fi
     if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
-        ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ''
+	mkdir -p /home/ssh
+	ln -s /home/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
+    fi
+    if [ ! -f /home/ssh/ssh_host_rsa_key ]; then
+        ssh-keygen -t rsa -b 4096 -f /home/ssh/ssh_host_rsa_key -N ''
     fi
 fi
 
