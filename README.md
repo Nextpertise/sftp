@@ -27,7 +27,7 @@ This image is based on the `atmoz/sftp` image, extended to use MySecureShell ins
 ## Simplest docker run example
 
 ```
-docker run -p 22:22 -d heimblick/sftp foo:pass:::upload
+docker run -p 22:22 -d nextpertise/sftp foo:pass:::upload
 ```
 
 User "foo" with password "pass" can login with sftp and upload files to a folder called "upload". No mounted directories or custom UID/GID. Later you can inspect the files and use `--volumes-from` to mount them somewhere else (or see next example).
@@ -39,7 +39,7 @@ Let's mount a directory and set UID:
 ```
 docker run \
     -v /host/upload:/home/foo/upload \
-    -p 2222:22 -d heimblick/sftp \
+    -p 2222:22 -d nextpertise/sftp \
     foo:pass:1001
 ```
 
@@ -103,54 +103,3 @@ docker run \
     foo::1001
 ```
 
-## Providing your own SSH host key (recommended)
-
-This container will generate new SSH host keys at first run. To avoid that your users get a MITM warning when you recreate your container (and the host keys changes), you can mount your own host keys.
-
-```
-docker run \
-    -v /host/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key \
-    -v /host/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key \
-    -v /host/share:/home/foo/share \
-    -p 2222:22 -d heimblick/sftp \
-    foo::1001
-```
-
-Tip: you can generate your keys with these commands:
-
-```
-ssh-keygen -t ed25519 -f ssh_host_ed25519_key < /dev/null
-ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key < /dev/null
-```
-
-## Execute custom scripts or applications
-
-Put your programs in `/etc/sftp.d/` and it will automatically run when the container starts.
-See next section for an example.
-
-## Bindmount dirs from another location
-
-If you are using `--volumes-from` or just want to make a custom directory available in user's home directory, you can add a script to `/etc/sftp.d/` that bindmounts after container starts.
-
-```
-#!/bin/bash
-# File mounted as: /etc/sftp.d/bindmount.sh
-# Just an example (make your own)
-
-function bindmount() {
-    if [ -d "$1" ]; then
-        mkdir -p "$2"
-    fi
-    mount --bind $3 "$1" "$2"
-}
-
-# Remember permissions, you may have to fix them:
-# chown -R :users /data/common
-
-bindmount /data/admin-tools /home/admin/tools
-bindmount /data/common /home/dave/common
-bindmount /data/common /home/peter/common
-bindmount /data/docs /home/peter/docs --read-only
-```
-
-**NOTE:** Using `mount` requires that your container runs with the `CAP_SYS_ADMIN` capability turned on. [See this answer for more information](https://github.com/atmoz/sftp/issues/60#issuecomment-332909232).
