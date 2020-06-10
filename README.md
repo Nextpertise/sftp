@@ -13,13 +13,6 @@ This image is based on the `atmoz/sftp` image, extended to use MySecureShell ins
   - Add directory names at the end, if you want to create them under the user's
     home directory. Perfect when you just want a fast way to upload something.
 - Optional (but recommended): mount volumes.
-  - The users are chrooted to their home directory, so you can mount the
-    volumes in separate directories inside the user's home directory
-    (/home/user/**mounted-directory**) or just mount the whole **/home** directory.
-    Just remember that the users can't create new files directly under their
-    own home directory, so make sure there are at least one subdirectory if you
-    want them to upload files.
-  - For persistent server fingerprint, mount your own host keys (i.e. `/etc/ssh/ssh_host_*`)
   - Create a custom `sftp_config` and mount it to `/etc/ssh/sftp_config` to override MySecureShell defaults. See [MySecureShell documentation](https://mysecureshell.readthedocs.io/en/latest/configuration_overview.html) for available options. (**highly recommended**)
 
 # Examples
