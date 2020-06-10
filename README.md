@@ -96,7 +96,7 @@ Tip: you can use [atmoz/makepasswd](https://hub.docker.com/r/atmoz/makepasswd/) 
 
 ## Logging in with SSH keys
 
-Mount public keys in the user's `.ssh/keys/` directory. All keys are automatically appended to `.ssh/authorized_keys` (you can't mount this file directly, because OpenSSH requires limited file permissions). In this example, we do not provide any password, so the user `foo` can only login with his SSH key.
+Mount public keys in the user's `.ssh/keys/` directory. All keys are automatically appended to `.ssh/authorized_keys`. And user can also directly edit `.ssh/authorized_keys`. In this example, we do not provide any password, so the user `foo` can only login with his SSH key.
 
 ```
 docker run \
