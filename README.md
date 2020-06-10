@@ -99,7 +99,7 @@ docker run \
     -v /host/id_rsa.pub:/home/foo/.ssh/keys/id_rsa.pub:ro \
     -v /host/id_other.pub:/home/foo/.ssh/keys/id_other.pub:ro \
     -v /host/share:/home/foo/share \
-    -p 2222:22 -d heimblick/sftp \
+    -p 2222:22 -d nextpertise/sftp \
     foo::1001
 ```
 
