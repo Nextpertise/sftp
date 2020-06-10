@@ -27,7 +27,7 @@ This image is based on the `atmoz/sftp` image, extended to use MySecureShell ins
 ## Simplest docker run example
 
 ```
-docker run -p 22:22 -d nextpertise/sftp foo:pass:::upload
+docker run -p 22:22 -d nextpertise/s3sftp foo:pass:::upload
 ```
 
 User "foo" with password "pass" can login with sftp and upload files to a folder called "upload". No mounted directories or custom UID/GID. Later you can inspect the files and use `--volumes-from` to mount them somewhere else (or see next example).
@@ -39,7 +39,7 @@ Let's mount a directory and set UID:
 ```
 docker run \
     -v /host/upload:/home/foo/upload \
-    -p 2222:22 -d nextpertise/sftp \
+    -p 2222:22 -d nextpertise/s3sftp \
     foo:pass:1001
 ```
 
@@ -47,12 +47,23 @@ docker run \
 
 ```
 sftp:
-    image: heimblick/sftp
+    image: nextpertise/s3sftp
+    environment:
+      - TZ=Europe/Amsterdam
+      - S3_URL=http://s3host.com/
+      - S3_BUCKET=bucketname
+      - ACCESS_KEY_ID=key_id
+      - SECRET_ACCESS_KEY=access_key
     volumes:
-        - /host/upload:/home/foo/upload
+      - ./sftp_users.conf:/etc/sftp/users.conf
     ports:
         - "2222:22"
-    command: foo:pass:1001
+    devices:
+      - /dev/fuse:/dev/fuse
+    security_opt:
+      - "apparmor:unconfined"
+    cap_add:
+      - SYS_ADMIN
 ```
 
 ### Logging in
@@ -65,7 +76,7 @@ The OpenSSH server runs by default on port 22, and in this example, we are forwa
 docker run \
     -v /host/users.conf:/etc/sftp/users.conf:ro \
     -v mySftpVolume:/home \
-    -p 2222:22 -d heimblick/sftp
+    -p 2222:22 -d nextpertise/s3sftp
 ```
 
 /host/users.conf:
@@ -83,7 +94,7 @@ Add `:e` behind password to mark it as encrypted. Use single quotes if using ter
 ```
 docker run \
     -v /host/share:/home/foo/share \
-    -p 2222:22 -d heimblick/sftp \
+    -p 2222:22 -d nextpertise/s3sftp \
     'foo:$1$0G2g0GSt$ewU0t6GXG15.0hWoOX8X9.:e:1001'
 ```
 
@@ -99,7 +110,7 @@ docker run \
     -v /host/id_rsa.pub:/home/foo/.ssh/keys/id_rsa.pub:ro \
     -v /host/id_other.pub:/home/foo/.ssh/keys/id_other.pub:ro \
     -v /host/share:/home/foo/share \
-    -p 2222:22 -d nextpertise/sftp \
+    -p 2222:22 -d nextpertise/s3sftp \
     foo::1001
 ```
 
