@@ -24,7 +24,7 @@ rawurlencode() {
 # Apply URL encode
 rawurlencode "$p_filename"
 p_filename=${REPLY}
-t_string=$(cat /var/run/sftp/users.conf | grep "${p_user}:" | awk -F ':' '{for(i=4;i<=NF;i++){printf "%s:", $i}}' | sed 's/.$//')
+t_string=$(cat /var/run/sftp/users.conf | grep "${p_user}:" | awk -F ':' '{for(i=6;i<=NF;i++){printf "%s:", $i}}' | sed 's/.$//')
 if [ -z "${t_string}" ]; then
     # No callback found
     exit 0
