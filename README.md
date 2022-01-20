@@ -2,7 +2,7 @@
 
 Easy to use SFTP ([SSH File Transfer Protocol](https://en.wikipedia.org/wiki/SSH_File_Transfer_Protocol)) server with [OpenSSH](https://en.wikipedia.org/wiki/OpenSSH) and [MySecureShell](https://mysecureshell.readthedocs.io/en/latest/).
 
-This image is based on the `atmoz/sftp` image, extended to use MySecureShell instead of OpenSSH's internal sftp-server. This allows for bandwidth and connection limits, as well as enhanced ACLs.
+This image is based on the `atmoz/sftp` image, extended to use MySecureShell instead of OpenSSH's internal sftp-server. This allows for bandwidth and connection limits, as well as enhanced ACLs. Then extended again to use s3 storage as possible backend.
 
 # Usage
 

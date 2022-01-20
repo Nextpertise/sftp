@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:bullseye-slim
 MAINTAINER Teun Ouwehand
 
 ENV MOUNT_POINT=/home
