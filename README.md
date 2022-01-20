@@ -36,19 +36,21 @@ docker run \
     foo:pass:1001
 ```
 
-### Using Docker Compose:
+### S3 example using docker-compose:
 
 ```
 sftp:
     image: nextpertise/s3sftp
     environment:
       - TZ=Europe/Amsterdam
+      - MOUNT_S3=true
       - S3_URL=http://s3host.com/
       - S3_BUCKET=bucketname
       - ACCESS_KEY_ID=key_id
       - SECRET_ACCESS_KEY=access_key
     volumes:
-      - ./sftp_users.conf:/etc/sftp/users.conf
+      - ./sftp_users.conf:/etc/sftp/users.conf # < Optional if `command: user:pass:1000:100` is passed
+      - ./my_sftp_config_file:/etc/my_sftp_config_file # < Optional
     ports:
         - "2222:22"
     devices:
