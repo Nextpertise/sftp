@@ -1,6 +1,7 @@
-FROM debian:stretch-slim
+FROM debian:bullseye-slim
 MAINTAINER Teun Ouwehand
 
+ENV MOUNT_S3=true
 ENV MOUNT_POINT=/home
 ENV PUID=1000
 ENV PGID=1000
@@ -39,7 +40,8 @@ RUN set -ex \
     && apt-get purge -y git gcc make automake build-essential pkg-config \
     && apt-get autoremove -y \
     && rm -fv /etc/ssh/ssh_host_*key* \
-    && mkdir /run/sshd
+    && mkdir /run/sshd \
+    && touch /etc/my_sftp_config_file
 
 COPY sshd_config /etc/ssh/sshd_config
 COPY sftp_config /etc/ssh/sftp_config
