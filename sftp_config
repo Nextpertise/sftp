@@ -32,4 +32,4 @@
 	CallbackUpload		"/usr/local/bin/callback.sh $USER $LAST_FILE_PATH"
 </Default>
 
-#Include /etc/my_sftp_config_file	#include this valid configuration file
+Include /etc/my_sftp_config_file	#include this valid configuration file

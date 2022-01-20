@@ -114,17 +114,19 @@ function createUser() {
 }
 
 # Mount S3
-test $MOUNT_POINT
-if [ -z "$MOUNT_POINT" ]; then
-    echo 'Invalid mountpoint'
-    exit
-fi
-rm -rf ${MOUNT_POINT}
-mkdir -p ${MOUNT_POINT}
+if [[ "$MOUNT_S3" == "true" ]]; then
+    test $MOUNT_POINT
+    if [ -z "$MOUNT_POINT" ]; then
+        echo 'Invalid mountpoint'
+        exit
+    fi
+    rm -rf ${MOUNT_POINT}
+    mkdir -p ${MOUNT_POINT}
 
-echo ${ACCESS_KEY_ID}:${SECRET_ACCESS_KEY} > /etc/.s3cred
-chmod 600 /etc/.s3cred
-/usr/bin/s3fs ${S3_BUCKET} ${MOUNT_POINT} -o passwd_file=/etc/.s3cred,allow_other,use_path_request_style,url=${S3_URL} -o umask=0033,uid=1000
+    echo ${ACCESS_KEY_ID}:${SECRET_ACCESS_KEY} > /etc/.s3cred
+    chmod 600 /etc/.s3cred
+    /usr/bin/s3fs ${S3_BUCKET} ${MOUNT_POINT} -o passwd_file=/etc/.s3cred,allow_other,use_path_request_style,url=${S3_URL} -o umask=0033,uid=1000
+fi
 
 # Allow running other programs, e.g. bash
 if [[ -z "$1" || "$1" =~ $reArgsMaybe ]]; then
