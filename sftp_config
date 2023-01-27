@@ -4,7 +4,7 @@
 
 #Default rules for everybody
 <Default>
-	GlobalDownload		50k	#total speed download for all clients
+	GlobalDownload		0	#total speed download for all clients
 					# o -> bytes   k -> kilo bytes   m -> mega bytes
 	GlobalUpload		0	#total speed download for all clients (0 for unlimited)
 	Download 		0	#limit speed download for each connection
