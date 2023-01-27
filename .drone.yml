@@ -21,7 +21,7 @@ steps:
   image: registry.nextpertise.tools/nextpertise-proxy/plugins/docker
   privileged: true
   settings:
-    repo: registry1.nextpertise.nl/nextpertise/s3sftp
+    repo: registry1.nextpertise.nl/pti/s3sftp
     registry: registry1.nextpertise.nl
     username:
       from_secret: registry1_nextpertise_nl_harbor_user
