@@ -8,7 +8,7 @@ steps:
   image: registry.nextpertise.tools/nextpertise-proxy/plugins/docker
   privileged: true
   settings:
-    repo: registry.nextpertise.tools/nextpertise/dnstool
+    repo: registry.nextpertise.tools/nextpertise/s3sftp
     registry: registry.nextpertise.tools
     username:
       from_secret: platform_harbor_username
@@ -21,8 +21,8 @@ steps:
   image: registry.nextpertise.tools/nextpertise-proxy/plugins/docker
   privileged: true
   settings:
-    repo: registry.nextpertise.tools/nextpertise/dnstool
-    registry: registry.nextpertise.tools
+    repo: registry1.nextpertise.nl/nextpertise/s3sftp
+    registry: registry1.nextpertise.nl
     username:
       from_secret: registry1_nextpertise_nl_harbor_user
     password:
