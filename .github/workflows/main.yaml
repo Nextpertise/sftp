@@ -2,7 +2,7 @@ name: main
 on: push
 
 jobs:
-  build_docker_image_private:
+  build_docker_image:
     runs-on: public-runners
     steps:
       - name: Checkout
@@ -21,7 +21,7 @@ jobs:
       - name: Log in to public registry
         uses: docker/login-action@v3
         with:
-          registry: registry.nextpertise.tools
+          registry: registry1.nextpertise.nl
           username: ${{ secrets.REGISTRY1_NEXTPERTISE_NL_PUBLIC_ACCOUNT }}
           password: ${{ secrets.REGISTRY1_NEXTPERTISE_NL_PUBLIC_KEY }}
 
