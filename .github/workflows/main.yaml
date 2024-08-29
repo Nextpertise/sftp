@@ -1,0 +1,39 @@
+name: main
+on: push
+
+jobs:
+  build_docker_image_private:
+    runs-on: public-runners
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to private registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.nextpertise.tools
+          username: ${{ secrets.REGISTRY_NEXTPERTISE_TOOLS_PUBLIC_ACCOUNT }}
+          password: ${{ secrets.REGISTRY_NEXTPERTISE_TOOLS_PUBLIC_KEY }}
+
+      - name: Log in to public registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.nextpertise.tools
+          username: ${{ secrets.REGISTRY1_NEXTPERTISE_NL_PUBLIC_ACCOUNT }}
+          password: ${{ secrets.REGISTRY1_NEXTPERTISE_NL_PUBLIC_KEY }}
+
+      - name: Set context
+        run: echo "context=$(pwd)" >> $GITHUB_ENV
+
+      - name: Push image to registry
+        uses: docker/build-push-action@v5
+        with:
+          file: ./Dockerfile
+          context: ${{ env.context }}/
+          push: true
+          tags: |
+            registry.nextpertise.tools/nextpertise/s3sftp:latest
+            registry1.nextpertise.nl/pti/s3sftp:latest
